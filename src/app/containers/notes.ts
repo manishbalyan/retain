@@ -1,9 +1,10 @@
 /**
  * Created by consultadd on 2/8/16.
  */
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {NoteCard} from "../uI/note-card";
 import {NoteCreator} from "../uI/note-creator";
+import {NoteService} from "../services/notes";
 
 @Component({
     selector: 'notes-container',
@@ -34,19 +35,27 @@ import {NoteCreator} from "../uI/note-creator";
     directives: [NoteCard, NoteCreator],
 })
 
-export class Notes{
-    notes = [
-        {title: 'new note', value: 'note here', color: 'seagreen'},
-        {title: 'new note1', value: 'note here1', color: 'lightblue'},
-        {title: 'new note2', value: 'note here2', color: 'yellow'},
-
-    ];
+export class Notes implements OnDestroy{
+    notes = [];
+    ngOnDestroy(){
+        console.log("Destroyed");
+    }
+    constructor(private noteService: NoteService){
+        this.noteService.getNotes()
+            .subscribe(res => this.notes = res.data);
+    }
 
     onNoteChecked(note, i){
-        this.notes.splice(i,1);
+        this.noteService.completeNote(note)
+            .subscribe(note => {
+                const i = this.notes.findIndex(localNote => localNote.id === note.id);
+                this.notes.splice(i,1);
+            })
     }
 
     onCreateNote(note){
-        this.notes.push(note);
+        this.noteService.createNote(note)
+            .subscribe(note => this.notes.push(note));
+        console.log(this.notes);
     }
 }

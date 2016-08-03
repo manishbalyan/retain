@@ -2,13 +2,14 @@
  * Created by consultadd on 2/8/16.
  */
 import {Component} from '@angular/core';
-import {Main} from './containers/main';
+import {ROUTER_DIRECTIVES} from "@angular/router";
+
 @Component({
     selector: 'app',
     template: `
-       <main-container></main-container>
+       <router-outlet></router-outlet>
         `,
-    directives: [Main]
+    directives: [...ROUTER_DIRECTIVES]
 })
 
 export class App{
