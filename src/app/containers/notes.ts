@@ -5,6 +5,8 @@ import {Component, OnDestroy} from '@angular/core';
 import {NoteCard} from "../uI/note-card";
 import {NoteCreator} from "../uI/note-creator";
 import {NoteService} from "../services/notes";
+import 'rxjs/Rx';
+import {Store} from "../store";
 
 @Component({
     selector: 'notes-container',
@@ -40,22 +42,21 @@ export class Notes implements OnDestroy{
     ngOnDestroy(){
         console.log("Destroyed");
     }
-    constructor(private noteService: NoteService){
+    constructor(private noteService: NoteService, private store: Store){
+        this.store.changes.pluck('notes')
+            .subscribe((notes: any) => this.notes = notes)
+
         this.noteService.getNotes()
-            .subscribe(res => this.notes = res.data);
+            .subscribe();
     }
 
     onNoteChecked(note, i){
         this.noteService.completeNote(note)
-            .subscribe(note => {
-                const i = this.notes.findIndex(localNote => localNote.id === note.id);
-                this.notes.splice(i,1);
-            })
+            .subscribe()
     }
 
     onCreateNote(note){
         this.noteService.createNote(note)
-            .subscribe(note => this.notes.push(note));
-        console.log(this.notes);
+            .subscribe();
     }
 }
