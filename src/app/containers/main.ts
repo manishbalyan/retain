@@ -1,24 +1,21 @@
-/**
- * Created by consultadd on 2/8/16.
- */
-import {Component} from '@angular/core';
-import { AppBar} from '../uI'
-import {ROUTER_DIRECTIVES} from "@angular/router";
+import { Component } from '@angular/core';
+import { AppBar } from '../ui/app-bar';
+import { ROUTER_DIRECTIVES } from '@angular/router';
+
 
 @Component({
-    selector: 'main-container',
-    template: `
-        <div>
-            <app-bar></app-bar>
-            <main class="main">
-                 <router-outlet></router-outlet>
-            </main>
-           
-        </div>
-`,
-    directives: [AppBar, ...ROUTER_DIRECTIVES]
+  selector: 'main-container',
+  directives: [
+    AppBar,
+    ...ROUTER_DIRECTIVES
+  ],
+  template: `
+    <div class="main-container">
+      <app-bar></app-bar>
+      <main class="main">
+         <router-outlet></router-outlet>
+      </main>
+    </div>
+  `
 })
-
-export class Main{
-
-}
+export class Main {}

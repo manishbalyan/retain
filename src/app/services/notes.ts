@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
+import { Note } from '../store';
+import { StoreHelper } from './store-helper';
 import { ApiService } from './api';
 import 'rxjs/Rx';
-import {StoreHelper} from "./store-helper";
-
 
 @Injectable()
 export class NoteService {
-    path: string = '/notes';
-    constructor(private apiService: ApiService, private storeHelper: StoreHelper) {}
 
-    createNote(note) {
-        return this.apiService.post(this.path, note)
-        .do(saveNote => this.storeHelper.add('notes', saveNote))
-    }
+  path: string = '/notes';
+  constructor(private storeHelper: StoreHelper, private apiService: ApiService) {}
 
-    getNotes() {
-        return this.apiService.get(this.path)
-        .do(res => this.storeHelper.update('notes', res.data))
-    }
+  createNote(note: Note) {
+    return this.apiService.post(this.path, note)
+    .do(savedNote => this.storeHelper.add('notes', savedNote))
+  }
 
-    completeNote(note) {
-        return this.apiService.delete(`${this.path}/${note.id}`)
-        .do(res => this.storeHelper.findAndDelete('notes', res.id))
-    }
+  getNotes() {
+    return this.apiService.get(this.path)
+    .do(res => this.storeHelper.update('notes', res.data));
+  }
+
+  completeNote(note: Note) {
+    return this.apiService.delete(`${this.path}/${note.id}`)
+    .do(res => this.storeHelper.findAndDelete('notes', res.id));
+  }
 }
